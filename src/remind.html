@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        .reminder {
+            text-align: center;
+            margin: 100px auto;
+            font-size: 30px;
+            width: 280px;
+            color: gold
+        }
+        
+        .background {
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            filter: blur(3px) opacity(0.2);
+        }
+        
+        .close {
+            position: absolute;
+            font-size: 14px;
+            color: dodgerblue;
+            right: 30px;
+            bottom: 30px;
+            cursor: pointer;
+            z-index: 1;
+        }
+    </style>
+</head>
+
+<body>
+    <span class="close enable-click">okk</span>
+    <div class="reminder"></div>
+    <div>
+        <img class="background" />
+    </div>
+</body>
+<script>
+    const electron = require('electron')
+    const {
+        ipcRenderer
+    } = electron
+
+    const randomIndex = parseInt(Math.random() * 5)
+        //设置提醒的背景图
+    document.querySelector('.background').setAttribute('src', `./img/1.gif`)
+
+    ipcRenderer.on('setTask', (event, task) => {
+        document.querySelector('.reminder').innerHTML =
+            `小助手提醒您，您该完成<span>${decodeURIComponent(task)}</span>啦(ง •_•)ง`
+    })
+
+    const closeDom = document.querySelector('.close')
+    closeDom.addEventListener('click', () => {
+        ipcRenderer.send('remindWindow:close')
+    })
+</script>
+
+</html>
